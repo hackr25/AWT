@@ -1,0 +1,155 @@
+// Practical No: 05
+// Aim: Event Handling
+
+import React, { useState } from 'react';
+
+// 1. Form Event Handler
+export function FormEventHandler() {
+  const [inputValue, setInputValue] = useState('');
+  
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log('Submitted value:', inputValue);
+  };
+  
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+  
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="text" value={inputValue} onChange={handleInputChange} />
+      <button type="submit">Submit</button>
+      <h2>submitted value by sangram is {inputValue}</h2>
+    </form>
+  );
+}
+
+// 2. KeyDown Event Handler
+export function KeyDownEventHandler() {
+  const [inputValue, setInputValue] = useState('');
+  
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      console.log('Submitted value:', inputValue);
+    }
+  };
+  
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+  
+  return (
+    <div>
+      <input 
+        type="text" 
+        value={inputValue} 
+        onKeyDown={handleKeyDown} 
+        onChange={handleInputChange} 
+      />
+      <p>{inputValue}</p>
+    </div>
+  );
+}
+
+// 3. Array Manipulation with State
+export function MultipleValuesArray() {
+  const friendsArray = ["Sangram", "Samidha", "Anusha", "Arya"];
+  const [friends, setFriends] = useState(friendsArray);
+  
+  const handleFunction = () => {
+    const newfriend = document.getElementById("friend").value;
+    setFriends([...friends, newfriend]);
+  };
+  
+  return (
+    <div>
+      <h1>List</h1>
+      <ul>
+        {friends.map((f, index) =>
+          <li key={index}>
+            {f}
+          </li>
+        )}
+      </ul>
+      <input type="text" id="friend" placeholder='Enter friend name'/>
+      <button onClick={handleFunction}>Add Values</button>
+    </div>
+  );
+}
+
+// 4. Add, Remove, and Insert in Array
+export function AddRemoveArray() {
+  const [users, setUsers] = useState([
+    { id: 1, username: "Sangram" },
+    { id: 2, username: "Samidha" }
+  ]);
+  
+  const addUser = () => {
+    const newUser = {
+      id: users.length + 1,
+      username: `User ${users.length + 1}`
+    };
+    const newUsers = [...users, newUser];
+    console.log(newUsers);
+    setUsers(newUsers);
+  };
+  
+  const removeUser = (index) => () => {
+    const newUsers = [...users];
+    console.log(newUsers);
+    newUsers.splice(index, 1);
+    setUsers(newUsers);
+  };
+  
+  const addAfter = (index) => () => {
+    const newUser = {
+      id: users.length + 1,
+      username: `User ${users.length + 1}`
+    };
+    const newUsers = [...users];
+    newUsers.splice(index + 1, 0, newUser);
+    console.log(newUsers);
+    setUsers(newUsers);
+  };
+  
+  return (
+    <>
+      <button onClick={addUser}>Add User</button>
+      {users.map((user, index) => (
+        <div className="user" key={user.id}>
+          {user.username}
+          <button onClick={removeUser(index)}>Remove User</button>
+          <button onClick={addAfter(index)}>Add immediate next User</button>
+        </div>
+      ))}
+    </>
+  );
+}
+
+// App.js example for using these components
+export function Practical05App() {
+  return (
+    <div className="App">
+      <h1>Practical 05: Event Handling</h1>
+      <div style={{marginBottom: '30px', padding: '20px', border: '1px solid #ccc'}}>
+        <h2>1. Form submission event handler</h2>
+        <FormEventHandler />
+      </div>
+      <div style={{marginBottom: '30px', padding: '20px', border: '1px solid #ccc'}}>
+        <h2>2. Keydown event handler</h2>
+        <KeyDownEventHandler />
+      </div>
+      <div style={{marginBottom: '30px', padding: '20px', border: '1px solid #ccc'}}>
+        <h2>3. Add elements to array using state</h2>
+        <MultipleValuesArray />
+      </div>
+      <div style={{padding: '20px', border: '1px solid #ccc'}}>
+        <h2>4. Add, remove, and insert users</h2>
+        <AddRemoveArray />
+      </div>
+    </div>
+  );
+}
+
+export default Practical05App;
