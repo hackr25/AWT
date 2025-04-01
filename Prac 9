@@ -1,0 +1,119 @@
+// Practical No: 09 - Node.js File Operations and HTTP Server
+
+// =====================================================
+// i) Reading a file
+// =====================================================
+
+// a. Synchronously reading a file (Read.js)
+const fs = require("fs");
+const a = fs.readFileSync('./sample.txt', "utf-8");
+console.log(a);
+
+// b. Asynchronously reading a file (Async.js)
+const fs = require("fs");
+fs.readFile("./sample.txt", "utf-8", 
+  (error, data) => {
+    if(error) {
+      throw new Error('Error reading file!');
+    }
+    console.log(data);
+  }
+);
+
+// c. Reading file content in Async function (Async_fun.js)
+const fs = require("fs").promises;
+
+async function readFile() {
+  try {
+    const data = await fs.readFile("sample.txt", "utf-8");
+    console.log(data);
+  }
+  catch(err) {
+    console.log(err);
+  }
+}
+
+readFile();
+
+// =====================================================
+// ii) Writing a file
+// =====================================================
+
+// Writing.js - Create, read, append, rename, and delete operations
+const fs = require('fs/promises');
+
+const writeFunct = async () => {
+  try {
+    const d = await fs.readFile('example.txt', 'utf-8');
+    console.log(d);
+    
+    await fs.writeFile('example.txt', 'Writing in a file', "utf-8");
+    await fs.appendFile('example.txt', '\n data append via node.js', "utf-8");
+    await fs.rename('example.txt', 'NewWrite.txt');
+    
+    const data = await fs.readFile('NewWrite.txt', "utf-8");
+    console.log(data);
+  }
+  catch(err) {
+    throw err;
+  }
+};
+
+writeFunct();
+
+// =====================================================
+// iii) Command line input with event emission
+// =====================================================
+
+// Users.js
+const fs = require('fs');
+const readline = require('readline');
+const EventEmitter = require('events');
+const eventEmitter = new EventEmitter();
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+function handleInput(input) {
+  eventEmitter.emit('textReady', input);
+}
+
+eventEmitter.on('textReady', (text) => {
+  console.log(`Custom event fired: Text is ready - ${text}`);
+  fs.writeFile('text.txt', text, (err) => {
+    if (err) throw err;
+    console.log('Text has been saved to text.txt');
+    rl.close();
+  });
+});
+
+rl.question('Enter some text: ', (text) => {
+  handleInput(text);
+});
+
+// =====================================================
+// iv) Creating an HTTP server
+// =====================================================
+
+// Httpq4.js
+const http = require('http');
+const hostname = '127.0.0.1';
+const port = 4000;
+
+const server = http.createServer((req, res) => {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  
+  if (req.url === '/hello') {
+    res.end('Hello World!\n');
+  } else if (req.url === '/about') {
+    res.end('This is the about page.\n');
+  } else {
+    res.end('Node.js server!\n');
+  }
+});
+
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});
