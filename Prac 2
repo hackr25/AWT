@@ -1,0 +1,73 @@
+// Practical No: 02
+// Aim: Using states in class component
+
+import React, { Component } from 'react';
+
+// Message component with state
+export class Message extends Component {
+  constructor() {
+    super();
+    this.state = {
+      message: "Welcome Sangram Ghorpade"
+    };
+  }
+  
+  render() {
+    return (
+      <div>
+        <h1>{this.state.message}</h1>
+        <button onClick={() => this.changeMsg()}>Click me</button>
+      </div>
+    );
+  }
+  
+  changeMsg() {
+    this.setState({
+      message: "Thankyou Sangram Ghorpade"
+    });
+  }
+}
+
+// Counter component with state
+export class Counter extends Component {
+  constructor() {
+    super();
+    this.state = {
+      ctr: 0
+    };
+  }
+  
+  render() {
+    return (
+      <div>
+        <h1>Creating Counter using React</h1>
+        <h2>:Sangram Ghorpade</h2>
+        <h1>Counter: {this.state.ctr}</h1>
+        <button onClick={() => this.CtrInc()}>Click me</button>
+      </div>
+    );
+  }
+  
+  CtrInc() {
+    this.setState({
+      ctr: this.state.ctr + 1
+    });
+  }
+}
+
+// App.js example for using these components
+export function Practical02App() {
+  return (
+    <div className="App">
+      <h1>Practical 02: Using states in class component</h1>
+      <div style={{marginBottom: '30px', padding: '20px', border: '1px solid #ccc'}}>
+        <Message />
+      </div>
+      <div style={{padding: '20px', border: '1px solid #ccc'}}>
+        <Counter />
+      </div>
+    </div>
+  );
+}
+
+export default Practical02App;
