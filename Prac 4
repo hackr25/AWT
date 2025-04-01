@@ -57,35 +57,43 @@ export class UpdateMount extends Component {
 }
 
 // 3. Unmount Component
-export class Unmount extends Component {
-  constructor() {
-    super();
-    this.state = {show: false};
-  }
-  
-  render() {
-    return (
-      <div>
-        {this.state.show ? <Child /> : <h2>Unmounting a component in React JS.</h2>}
-        <button onClick={() => this.setState({show: !this.state.show})}>Click me</button>
-      </div>
-    );
-  }
+import React from "react";
+
+class Unmount_gargi extends React.Component {
+    constructor() {
+        super(); this.state = {
+            delete: false,
+        };
+    }
+    render() {
+        return (
+            <div>
+                <h1>User List</h1>
+                <button onClick={() => this.setState({ delete: !this.state.delete })}> Delete Users</button>
+                {this.state.delete ? null : <User />}
+            </div>
+        );
+    }
 }
 
-export class Child extends Component {
-  componentWillUnmount() {
-    alert("Component unmounted");
-  }
-  
-  render() {
-    return (
-      <div>
-        <h1>This is child component</h1>
-      </div>
-    );
-  }
+
+class User extends React.Component {
+    componentWillUnmount() {
+        alert('Delete user successfully!');
+    }
+    render() {
+        return (
+            <div>
+
+                <h3>UserName: Jitesh</h3>
+                <h3>Email: Gargi@gmail.com</h3>
+            </div>
+        )
+    }
 }
+
+
+export default Unmount_gargi;
 
 // App.js example for using these components
 export function Practical04App() {
