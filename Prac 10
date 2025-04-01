@@ -1,0 +1,430 @@
+// Practical No: 10 - Creating servers using Express and handling HTTP methods
+
+// =====================================================
+// Q1) Creating an Express server that serves users from a JSON file
+// =====================================================
+
+// server.js - Display all users and users by ID
+const express = require('express');
+const fs = require('fs');
+const app = express();
+const port = 3000;
+
+const users = JSON.parse(fs.readFileSync('users.json', 'utf-8'));
+
+app.get('/users', (req, res) => {
+  res.send(users);
+});
+
+app.get('/users/:id', (req, res) => {
+  const user = parseInt(req.params.id);
+  const userId = users.find((u) => u.id === user);
+  
+  if(userId) {
+    res.json(userId);
+  } else {
+    res.send(`User with ${userId} is not found`);
+  }
+});
+
+app.listen(port, () => {
+  console.log(`App is listening on port ${port}`);
+});
+
+// =====================================================
+// Q2) Updating user data using PATCH method
+// =====================================================
+
+// server.js - PATCH method to update user data
+const express = require('express');
+const app = express();
+const fs = require('fs');
+const port = 3000;
+
+app.use(express.json());
+
+let users = JSON.parse(fs.readFileSync('users.json', 'utf-8'));
+
+app.get('/users', (req, res) => {
+  res.json(users);
+});
+
+app.get('/users/:id', (req, res) => {
+  const userId = parseInt(req.params.id);
+  const user = users.find(u => u.id === userId);
+  
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404).json({ message: "User not found" });
+  }
+});
+
+app.patch('/users/:id', (req, res) => {
+  const userId = parseInt(req.params.id);
+  const newName = req.query.name || req.body.name;
+  
+  if (!newName) {
+    return res.status(400).json({ message: "Name is required" });
+  }
+  
+  let user = users.find(u => u.id === userId);
+  
+  if (!user) {
+    return res.status(404).json({ message: `User with id ${userId} not found` });
+  }
+  
+  user.name = newName;
+  fs.writeFileSync('users.json', JSON.stringify(users, null, 2));
+  
+  res.json({ message: `User with id ${userId} updated successfully`, user });
+});
+
+app.listen(port, () => {
+  console.log(`App is listening on port ${port}`);
+});
+
+// =====================================================
+// Q3) Adding a new user to JSON file
+// =====================================================
+
+// server.js - POST method to add a new user
+const express = require("express");
+const fs = require("fs");
+const app = express();
+const PORT = 3000;
+
+app.use(express.json());
+
+const users = JSON.parse(fs.readFileSync("users.json", "utf8"));
+
+app.get("/users", (req, res) => {
+  res.json(users);
+});
+
+app.get("/users/:id", (req, res) => {
+  const userId = parseInt(req.params.id);
+  const user = users.find(u => u.id === userId);
+  
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404).json({ message: "User not found" });
+  }
+});
+
+app.post('/users/:id', (req, res) => {
+  const userId = parseInt(req.params.id);
+  const { name, age } = req.body;
+  
+  if (!name || !age) {
+    return res.status(400).json({ message: "Name and age are required" });
+  }
+  
+  const userExists = users.find(u => u.id === userId);
+  
+  if (userExists) {
+    return res.status(400).json({ message: `User with ID ${userId} already exists` });
+  }
+  
+  const newUser = { id: userId, name, age };
+  users.push(newUser);
+  
+  fs.writeFileSync("users.json", JSON.stringify(users, null, 2), "utf8");
+  
+  res.status(201).json({ message: "User added successfully", user: newUser });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
+
+// =====================================================
+// Q3B) Deleting a user with ID
+// =====================================================
+
+// server.js - DELETE method to remove a user
+const express = require("express");
+const fs = require("fs");
+const app = express();
+const PORT = 3000;
+
+const users = JSON.parse(fs.readFileSync("users.json", "utf8"));
+
+app.get("/users", (req, res) => {
+  res.json(users);
+});
+
+app.get("/users/:id", (req, res) => {
+  const userId = parseInt(req.params.id);
+  const user = users.find(u => u.id === userId);
+  
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404).json({ message: "User not found" });
+  }
+});
+
+app.delete('/users/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const users = JSON.parse(fs.readFileSync('users.json'));
+  
+  const updatedUsers = users.filter(user => user.id !== id);
+  
+  fs.writeFileSync('users.json', JSON.stringify(updatedUsers, null, 2));
+  
+  res.json({ message: `User with id ${id} deleted successfully` });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
+
+// =====================================================
+// Q4) Connecting Node.js with MongoDB
+// =====================================================
+
+// a. Create database
+const mongoose = require("mongoose");
+
+async function connectDB() {
+  try {
+    await mongoose.connect("mongodb://127.0.0.1:27017/MyDB", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("Connected to MongoDB Compass successfully!");
+  } catch (err) {
+    console.error("Error connecting to MongoDB Compass:", err);
+  }
+}
+
+connectDB();
+
+// b. Create collection
+const mongoose = require("mongoose");
+
+async function main() {
+  try {
+    await mongoose.connect("mongodb://127.0.0.1:27017/MyDB", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("Connected to MongoDB Compass successfully!");
+    
+    const userSchema = new mongoose.Schema({
+      id: Number,
+      name: String,
+      age: Number,
+    });
+    
+    const User = mongoose.model("User", userSchema);
+    console.log("Collection 'Users' created successfully!");
+    
+    mongoose.connection.close();
+  } catch (err) {
+    console.error("Error:", err);
+  }
+}
+
+main();
+
+// c. Add new users to the collection
+// MySchema.js
+const mongoose = require("mongoose");
+
+const userSchema = new mongoose.Schema({
+  id: { type: Number, unique: true },
+  name: String,
+  age: Number,
+});
+
+const User = mongoose.model("User", userSchema);
+
+module.exports = User;
+
+// Q4a.js - Add users
+const mongoose = require("mongoose");
+const readline = require("readline");
+const User = require("./MySchema");
+
+async function main() {
+  try {
+    await mongoose.connect("mongodb://127.0.0.1:27017/MyDB", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("Connected to MongoDB Compass successfully!");
+    console.log("Collection 'Users' created successfully!");
+    
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+    
+    rl.question("Enter User ID: ", async (id) => {
+      id = parseInt(id);
+      const existingUser = await User.findOne({ id });
+      
+      if (existingUser) {
+        console.error("Error: ID already exists. Choose a different ID.");
+        rl.close();
+        mongoose.connection.close();
+        return;
+      }
+      
+      rl.question("Enter Name: ", (name) => {
+        rl.question("Enter Age: ", async (age) => {
+          age = parseInt(age);
+          
+          const newUser = new User({ id, name, age });
+          await newUser.save();
+          
+          console.log("User added successfully!");
+          rl.close();
+          mongoose.connection.close();
+        });
+      });
+    });
+  } catch (err) {
+    console.error("Error:", err);
+    mongoose.connection.close();
+  }
+}
+
+main();
+
+// d. Delete user from the collection using specific id
+const mongoose = require("mongoose");
+const readline = require("readline");
+const User = require("./MySchema");
+
+async function main() {
+  try {
+    await mongoose.connect("mongodb://127.0.0.1:27017/MyDB", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("Connected to MongoDB Compass successfully!");
+    console.log("Collection 'Users' is ready!");
+    
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+    
+    rl.question("Enter User ID to delete: ", async (id) => {
+      id = parseInt(id);
+      const existingUser = await User.findOne({ id });
+      
+      if (!existingUser) {
+        console.error("Error: User ID not found.");
+      } else {
+        await User.deleteOne({ id });
+        console.log(`User with ID ${id} deleted successfully!`);
+      }
+      
+      rl.close();
+      mongoose.connection.close();
+    });
+  } catch (err) {
+    console.error("Error:", err);
+    mongoose.connection.close();
+  }
+}
+
+main();
+
+// e. Update the data of user for specific id
+const mongoose = require("mongoose");
+const readline = require("readline");
+const User = require("./MySchema");
+
+async function main() {
+  try {
+    await mongoose.connect("mongodb://127.0.0.1:27017/MyDB", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("Connected to MongoDB Compass successfully!");
+    console.log("Collection 'Users' is ready!");
+    
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+    
+    rl.question("Enter User ID to update: ", async (id) => {
+      id = parseInt(id);
+      const existingUser = await User.findOne({ id });
+      
+      if (!existingUser) {
+        console.error("Error: User ID not found.");
+        rl.close();
+        mongoose.connection.close();
+        return;
+      }
+      
+      rl.question("Enter new Name: ", (name) => {
+        rl.question("Enter new Age: ", async (age) => {
+          age = parseInt(age);
+          
+          await User.updateOne({ id }, { $set: { name, age } });
+          console.log(`User with ID ${id} updated successfully!`);
+          
+          rl.close();
+          mongoose.connection.close();
+        });
+      });
+    });
+  } catch (err) {
+    console.error("Error:", err);
+    mongoose.connection.close();
+  }
+}
+
+main();
+
+// f. Display data of all users
+const mongoose = require("mongoose");
+const User = require("./MySchema");
+
+async function main() {
+  try {
+    await mongoose.connect("mongodb://127.0.0.1:27017/MyDB", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("Connected to MongoDB Compass successfully!");
+    console.log("Fetching all users...");
+    
+    const users = await User.find();
+    
+    if (users.length === 0) {
+      console.log("No users found in the database.");
+    } else {
+      console.log("Users in the database:");
+      console.table(users.map(user => ({ ID: user.id, Name: user.name, Age: user.age })));
+    }
+    
+    mongoose.connection.close();
+  } catch (err) {
+    console.error("Error:", err);
+    mongoose.connection.close();
+  }
+}
+
+main();
+
+// g. Display data of user based on id parameter
+const mongoose = require("mongoose");
+const readline = require("readline");
+const User = require("./MySchema");
+
+async function main() {
+  try {
+    await mongoose.connect("mongodb://127.0.0.1:27017/MyDB", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
