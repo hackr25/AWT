@@ -1,0 +1,134 @@
+// Practical No: 03
+// Aim: Using States in Functional component
+
+import React, { useState, useReducer } from 'react';
+
+// Counter with useState
+export function CounterWithUseState() {
+  const [count, setCount] = useState(0);
+  
+  return (
+    <div>
+      <h1>Creating counter using useState in functional component</h1>
+      <h3>Sangram Ghorpade</h3>
+      <h1>Counter: {count}</h1>
+      <button onClick={() => setCount(count + 1)}>Increase</button>
+      <button onClick={() => setCount(count - 1)}>Decrease</button>
+      <button onClick={() => setCount(0)}>Reset</button>
+    </div>
+  );
+}
+
+// Age increment with useReducer
+export function AgeWithUseReducer() {
+  const [state, dispatch] = useReducer(reducer, {age: 40});
+  
+  function reducer(state, action) {
+    switch(action.type) {
+      case 'increment':
+        return {age: state.age + 1};
+      case 'decrement':
+        return {age: state.age - 1};
+      case 'reset':
+        return {age: 0};
+      default:
+        throw new Error('invalid');
+    }
+  }
+  
+  function Increment() {
+    dispatch({
+      type: 'increment'
+    });
+  }
+  
+  function Decrement() {
+    dispatch({
+      type: 'decrement'
+    });
+  }
+  
+  function Reset() {
+    dispatch({
+      type: 'reset'
+    });
+  }
+  
+  return (
+    <div>
+      <h2>Current age: {state.age}</h2>
+      <button onClick={Increment}>Increment</button>
+      <button onClick={Decrement}>Decrement</button>
+      <button onClick={Reset}>reset</button>
+    </div>
+  );
+}
+
+// Counter with useReducer
+export function CounterWithUseReducer() {
+  const [state, dispatch] = useReducer(reducer, {count: 0});
+  
+  function reducer(state, action) {
+    switch(action.type) {
+      case 'increment':
+        return {count: state.count + 1};
+      case 'decrement':
+        return {count: state.count - 1};
+      case 'reset':
+        return {count: 0};
+      default:
+        throw new Error('invalid');
+    }
+  }
+  
+  function Increment() {
+    dispatch({
+      type: 'increment'
+    });
+  }
+  
+  function Decrement() {
+    dispatch({
+      type: 'decrement'
+    });
+  }
+  
+  function Reset() {
+    dispatch({
+      type: 'reset'
+    });
+  }
+  
+  return (
+    <div>
+      <h1>Incrementing Counter using useReducer</h1>
+      <h2>Count: {state.count}</h2>
+      <button onClick={Increment}>Increment</button>
+      <button onClick={Decrement}>Decrement</button>
+      <button onClick={Reset}>reset</button>
+    </div>
+  );
+}
+
+// App.js example for using these components
+export function Practical03App() {
+  return (
+    <div className="App">
+      <h1>Practical 03: Using States in Functional component</h1>
+      <div style={{marginBottom: '30px', padding: '20px', border: '1px solid #ccc'}}>
+        <h2>Q1: Counter using useState Hook</h2>
+        <CounterWithUseState />
+      </div>
+      <div style={{marginBottom: '30px', padding: '20px', border: '1px solid #ccc'}}>
+        <h2>Q2: Increment the age using useReducer Hook</h2>
+        <AgeWithUseReducer />
+      </div>
+      <div style={{padding: '20px', border: '1px solid #ccc'}}>
+        <h2>Q3: Counter using useReducer Hook</h2>
+        <CounterWithUseReducer />
+      </div>
+    </div>
+  );
+}
+
+export default Practical03App;
