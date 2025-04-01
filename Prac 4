@@ -1,0 +1,111 @@
+// Practical No: 04
+// Aim: Mounting, Updating and Unmounting
+
+import React, { Component } from 'react';
+
+// 1. Mounting Component
+export class MountComp extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {name: "Sangram"};
+  }
+  
+  componentDidMount() {
+    setTimeout(() => this.setState({name: "World"}), 2000);
+  }
+  
+  render() {
+    return (
+      <div>
+        <h1>Hello {this.state.name}</h1>
+        <button>Click Me</button>
+      </div>
+    );
+  }
+}
+
+// 2. Update Component
+export class UpdateMount extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {name: "Sangram"};
+  }
+  
+  componentDidMount() {
+    setTimeout(() => this.setState({name: "World"}), 2000);
+  }
+  
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    document.getElementById('div1').innerHTML = "Previous name: " + prevState.name;
+    return null;
+  }
+  
+  componentDidUpdate() {
+    document.getElementById('div2').innerHTML = "Current name: " + this.state.name;
+  }
+  
+  render() {
+    return (
+      <div>
+        <h1>Update Life cycle</h1>
+        <h1>Hello {this.state.name}</h1>
+        <div id='div1'></div>
+        <div id='div2'></div>
+      </div>
+    );
+  }
+}
+
+// 3. Unmount Component
+export class Unmount extends Component {
+  constructor() {
+    super();
+    this.state = {show: false};
+  }
+  
+  render() {
+    return (
+      <div>
+        {this.state.show ? <Child /> : <h2>Unmounting a component in React JS.</h2>}
+        <button onClick={() => this.setState({show: !this.state.show})}>Click me</button>
+      </div>
+    );
+  }
+}
+
+export class Child extends Component {
+  componentWillUnmount() {
+    alert("Component unmounted");
+  }
+  
+  render() {
+    return (
+      <div>
+        <h1>This is child component</h1>
+      </div>
+    );
+  }
+}
+
+// App.js example for using these components
+export function Practical04App() {
+  return (
+    <div className="App">
+      <h1>Practical 04: Mounting, Updating and Unmounting</h1>
+      <div style={{marginBottom: '30px', padding: '20px', border: '1px solid #ccc'}}>
+        <h2>1. Mounting</h2>
+        <MountComp />
+      </div>
+      <div style={{marginBottom: '30px', padding: '20px', border: '1px solid #ccc'}}>
+        <h2>2. Update</h2>
+        <UpdateMount />
+      </div>
+      <div style={{padding: '20px', border: '1px solid #ccc'}}>
+        <h2>3. Unmount</h2>
+        <Unmount />
+      </div>
+    </div>
+  );
+}
+
+export default Practical04App;
