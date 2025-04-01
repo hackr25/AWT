@@ -1,0 +1,71 @@
+// Practical No: 01
+// Aim: Components and Properties
+
+import React, { Component } from 'react';
+
+// Class-based components example
+// ------------------------------
+
+// Class-based Parent Component
+export class ParentComponentClass extends Component {
+  render() {
+    return (
+      <div>
+        <h1>Using Class Component - Parent Component</h1>
+        <ChildComponentClass attributeName="Hello Sujal More" />
+      </div>
+    );
+  }
+}
+
+// Class-based Child Component
+export class ChildComponentClass extends Component {
+  render() {
+    return (
+      <div>
+        <h2>Child Component</h2>
+        <p>Received from Parent: {this.props.attributeName}</p>
+      </div>
+    );
+  }
+}
+
+// Function-based components example
+// ---------------------------------
+
+// Function-based Parent Component
+export function ParentComponentFunc() {
+  return (
+    <div>
+      <h1>Using Functional Component - Parent Component</h1>
+      <ChildComponentFunc attributeName="Hello Sujal More" />
+    </div>
+  );
+}
+
+// Function-based Child Component
+export function ChildComponentFunc(props) {
+  return (
+    <div>
+      <h2>Child Component</h2>
+      <p>Received from Parent: {props.attributeName}</p>
+    </div>
+  );
+}
+
+// App.js example for using these components
+export function Practical01App() {
+  return (
+    <div className="App" style={{textAlign:'center'}}>
+      <h1>Practical 01: Components and Properties</h1>
+      <div style={{marginBottom: '30px'}}>
+        <ParentComponentClass />
+      </div>
+      <div>
+        <ParentComponentFunc />
+      </div>
+    </div>
+  );
+}
+
+export default Practical01App;
