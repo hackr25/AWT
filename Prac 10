@@ -1,5 +1,40 @@
 // Practical No: 10 - Creating servers using Express and handling HTTP methods
 
+npm init
+npm init express http nodemon fs readline mongoose
+to run file : node filename.js
+
+Users.json:
+Users.json
+[
+ {
+ "id": 1,
+ "name": "Alice",
+ "age": 30
+ },
+ {
+ "id": 2,
+ "name": "veronica",
+ "age": 26
+ },
+ {
+ "id": 3,
+ "name": "Alex",
+ "age": 45
+ },
+ {
+ "id": 4,
+ "name": "Chris",
+ "age": 39
+ },
+ {
+ "id":5,
+ "name": "Millie",
+ "age": 19
+ },
+]
+
+
 // =====================================================
 // Q1) Creating an Express server that serves users from a JSON file
 // =====================================================
